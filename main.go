@@ -6,9 +6,11 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -82,12 +84,17 @@ func main() {
 	//books = append(books, Book{ID: "2", Title: "Преступление и наказание", Author: "Фёдор Достоевский", Price: "35"})
 
 	fmt.Println("Go MySQL Tutorial")
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 
 	// Open up our database connection.
 	// I've set up a database on my local machine using phpmyadmin.
 	// The database is called testDb
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/books")
-
+	db, err := sql.Open("mysql", os.Getenv("MYSQL_BOOKS"))
 	// if there is an error opening the connection, handle it
 	if err != nil {
 		panic(err.Error())
