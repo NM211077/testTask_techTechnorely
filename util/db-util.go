@@ -2,40 +2,38 @@ package util
 
 import (
 	"database/sql"
+	"fmt"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 )
-// Open up our database connection.
+
+// DBConn open up our database connection.
 func DBConn() *sql.DB {
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	db, err := sql.Open("mysql", os.Getenv("MYSQL_BOOKS"))
 	PanicError(err)
+	// check the connection
+	err = db.Ping()
 
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Successfully connected!")
 	return db
 }
-//handling with repetitive task of error-handling
+
+// PanicError handling with repetitive task of error-handling
 func PanicError(err error) {
 	if err != nil {
 		panic(err.Error())
 	}
 }
-
-
-//DB Create Operation
-func CreateBook(shoppingList types.ShoppingList) (int64, error) {
-	db := DBConn()
-	defer db.Close()
-
-	query := "INSERT INTO shopping_list (name, qty, unit) VALUES(?, ?, ?);"
-	stmt, stmtErr := db.Prepare(query)
-	util.PanicError(stmtErr)
-
-	res, queryErr := stmt.Exec(shoppingList.Name, shoppingList.Qty, shoppingList.Unit)
-	util.PanicError(queryErr)
-
-	id, getLastInsertIdErr := res.LastInsertId()
-	util.PanicError(getLastInsertIdErr)
-
-	return id, queryErr
-}
-
-
 
