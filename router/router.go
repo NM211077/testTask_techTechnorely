@@ -7,7 +7,6 @@ import (
 	"github.com/NM211077/testTask_techTechnorely/util"
 	"github.com/gorilla/mux"
 	"log"
-	//"math/rand"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -15,6 +14,7 @@ import (
 
 var books []models.Book
 
+// getAllBooks will return all the books
 func getAllBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// get all the users in the db
@@ -23,24 +23,22 @@ func getAllBooks(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalf("Unable to get all books. %v", err)
 	}
-	fmt.Println("book.title:", books[2].Title)
 	// send all the books as response
 	json.NewEncoder(w).Encode(books)
 }
 
-// GetBook will return a single book by its id
+// getBook will return a single book by its id
 func getBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	// get the id from the request params, key is "id"
 	params := mux.Vars(r)
 	// convert the id type from string to int
 	id, err := strconv.Atoi(params["id"])
-
 	if err != nil {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	// call the getBook function with book id to retrieve a single book
+	// call the GetBook function with book id to retrieve a single book
 	book, err := middleware.GetBook(int64(id))
 
 	if err != nil {
@@ -51,6 +49,7 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
+// createBook create a book in the mysql db
 func createBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var book models.Book
@@ -76,7 +75,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// UpdateBook update book's detail in the postgres db
+// UpdateBook update book's detail in the mysql db
 func updateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -92,7 +91,6 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 
 	// decode the json request to book
 	err = json.NewDecoder(r.Body).Decode(&book)
-	fmt.Println("book", book)
 	if err != nil {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
@@ -101,7 +99,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 	updatedRows := middleware.UpdateBook(int64(id), book)
 
 	// format the message string
-	msg := fmt.Sprintf("Book updated successfully. New title: %v, author:%v,  price: %v.Update rows: %v ", book.Title, book.Author, book.Price, updatedRows)
+	msg := fmt.Sprintf("Book updated successfully. New title: %v, author:%v,  price: %v. ", updatedRows.Title, updatedRows.Author, updatedRows.Price)
 
 	// format the response message
 	res := middleware.Response{

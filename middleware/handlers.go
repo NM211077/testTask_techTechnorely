@@ -82,17 +82,15 @@ func GetBook(id int64) (models.Book, error) { //дописать если нет
 func InsertBook(book models.Book) (int64, error) {
 	db := util.DBConn()
 	defer db.Close()
-	// INSERT INTO `books`.`books` (`ID`, `title`, `author`, `price`) VALUES ('3', 'drty', 'ud,c', '28');
-	//{"title":"Jeevs and Wooster","author":"P.G. Woodhause","price":"125"}
+	
 	// create the insert sql query
-	// returning bookid will return the id of the inserted user
 	sqlStatement := `INSERT INTO books (title, author, price) VALUES (?,?,? )`
 	stmt, stmtErr := db.Prepare(sqlStatement)
 	util.PanicError(stmtErr)
 
 	res, queryErr := stmt.Exec(book.Title, book.Author, book.Price)
 	util.PanicError(queryErr)
-
+	// returning bookid will return the id of the inserted book
 	id, getLastInsertIDErr := res.LastInsertId()
 	util.PanicError(getLastInsertIDErr)
 
@@ -100,28 +98,19 @@ func InsertBook(book models.Book) (int64, error) {
 }
 
 // UpdateBook update book in the DB
-func UpdateBook(id int64, book models.Book) int64 {
+func UpdateBook(id int64, book models.Book) (models.Book) {
 	db := util.DBConn()
 	defer db.Close()
-
+	fmt.Println("book handlers", book)
+	// create the update sql query
 	sqlStatement := `UPDATE books SET title=?, author=?, price=? WHERE id=?`
+	stmt, stmtErr := db.Prepare(sqlStatement)
+	util.PanicError(stmtErr)
 
-	res, err := db.Exec(sqlStatement, book.ID, book.Title, book.Author, book.Price)
+	_, queryErr := stmt.Exec(book.Title, book.Author, book.Price, id)
+	util.PanicError(queryErr)
 
-	if err != nil {
-		log.Fatalf("Unable to execute the query. %v", err)
-	}
-
-	// check how many rows affected
-	rowsAffected, err := res.RowsAffected()
-
-	if err != nil {
-		log.Fatalf("Error while checking the affected rows. %v", err)
-	}
-
-	fmt.Printf("Total rows/record affected %v", rowsAffected)
-
-	return rowsAffected
+	return book
 }
 
 // DeleteBook delete book in the DB
