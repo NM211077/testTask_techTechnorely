@@ -157,3 +157,4 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/book/{id}", s.updateBook).Methods("PUT", "POST")
 	s.Router.HandleFunc("/book/{id}", s.deleteBook).Methods("DELETE")
 }
+

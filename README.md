@@ -1,5 +1,4 @@
 
-
 ## Run locally
 Golang should be installed in your local machine
     https://golang.org/doc/install

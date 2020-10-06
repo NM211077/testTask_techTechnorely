@@ -10,3 +10,4 @@ func SetMiddlewareJSON(next http.HandlerFunc) http.HandlerFunc {
 		next(w, r)
 	}
 }
+
