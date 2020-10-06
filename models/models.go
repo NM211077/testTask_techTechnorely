@@ -1,8 +1,8 @@
 package models
 
 import (
-	"fmt"
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -12,49 +12,14 @@ type Book struct {
 	Author string  `json:"author"`
 	Price  float64 `json:"price"`
 }
+
 func PanicError(err error) {
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
-func (b *Book) GetBook(db *sql.DB) error {
-	return db.QueryRow("SELECT * FROM books WHERE id=?",
-		b.ID).Scan(&b.ID,&b.Title, &b.Author, &b.Price)
-}
-
-func (b *Book) UpdateBook(db *sql.DB) error {
-	_, err :=
-		db.Exec("UPDATE books SET title=?, author=?, price=? WHERE id=?",
-			b.Title, b.Author, b.Price, b.ID)
-
-	return err
-}
-
-func (b *Book) DeleteBook(db *sql.DB) error {
-	_, err := db.Exec("DELETE FROM books WHERE id=?", b.ID)
-
-	return err
-}
-
-func (b *Book) CreateBook(db *sql.DB) (int,error) {
-
-    // create the insert sql query
-	sqlStatement := ` INSERT INTO books (title, author, price) VALUES (?,?,? )`
-	stmt, stmtErr := db.Prepare(sqlStatement)
-	PanicError(stmtErr)
-
-	res, queryErr := stmt.Exec(b.Title, b.Author, b.Price)
-	PanicError(queryErr)
-	// returning bookid will return the id of the inserted book
-	id, getLastInsertIDErr := res.LastInsertId()
-	PanicError(getLastInsertIDErr)
-
-	var returnedID int
-	returnedID = int(id)
-	return returnedID, queryErr
-}
-
+//GetBooks get all books from the DB
 func GetBooks(db *sql.DB) ([]Book, error) {
 	var books []Book
 	// create the select sql query
@@ -78,8 +43,47 @@ func GetBooks(db *sql.DB) ([]Book, error) {
 		}
 		// append the book in the books slice
 		books = append(books, book)
-		fmt.Println("books",books)
+		fmt.Println("books", books)
 	}
 
 	return books, err
+}
+
+//GetBook get one book from the DB by its id
+func (b *Book) GetBook(db *sql.DB) error {
+	return db.QueryRow("SELECT * FROM books WHERE id=?",
+		b.ID).Scan(&b.ID, &b.Title, &b.Author, &b.Price)
+}
+
+//CreateBook insert new data to books table in DB
+func (b *Book) CreateBook(db *sql.DB) (int, error) {
+
+	// create the insert sql query
+	sqlStatement := ` INSERT INTO books (title, author, price) VALUES (?,?,? )`
+	stmt, stmtErr := db.Prepare(sqlStatement)
+	PanicError(stmtErr)
+
+	res, queryErr := stmt.Exec(b.Title, b.Author, b.Price)
+	PanicError(queryErr)
+	// returning bookid will return the id of the inserted book
+	id, getLastInsertIDErr := res.LastInsertId()
+	PanicError(getLastInsertIDErr)
+
+	var returnedID int
+	returnedID = int(id)
+	return returnedID, queryErr
+}
+
+//UpdateBook update book in the DB
+func (b *Book) UpdateBook(db *sql.DB) error {
+	_, err :=
+		db.Exec("UPDATE books SET title=?, author=?, price=? WHERE id=?",
+			b.Title, b.Author, b.Price, b.ID)
+	return err
+}
+
+// DeleteBook delete book in the DB
+func (b *Book) DeleteBook(db *sql.DB) error {
+	_, err := db.Exec("DELETE FROM books WHERE id=?", b.ID)
+	return err
 }

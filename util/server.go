@@ -2,11 +2,10 @@ package api
 
 import (
 	"fmt"
+	"github.com/NM211077/testTask_techTechnorely/controllers"
+	"github.com/joho/godotenv"
 	"log"
 	"os"
-	//"database/sql"
-	"github.com/joho/godotenv"
-	"github.com/NM211077/testTask_techTechnorely/controllers"
 )
 
 var server = controllers.Server{}
@@ -17,7 +16,7 @@ func init() {
 		log.Print("sad .env file found")
 	}
 }
-
+//Run initializes the router,DB
 func Run() {
 
 	var err error
@@ -29,8 +28,6 @@ func Run() {
 	}
 
 	server.Initialize(os.Getenv("DB_DRIVER"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_PORT"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
-
-	//seed.Load(server.DB)
 
 	server.Run(":8001")
 

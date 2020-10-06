@@ -1,17 +1,16 @@
 package controllers
 
 import (
-	"encoding/json"
-	"net/http"
-	"strconv"
-	//"error"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/NM211077/testTask_techTechnorely/models"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // sqlite database driver
 	"log"
+	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -57,36 +56,33 @@ func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	if err != nil {
 		fmt.Fprintf(w, "%s", err.Error())
 	}
-	fmt.Println("data response", data)
 }
 
 func (server *Server) createBook(w http.ResponseWriter, r *http.Request) {
 	var b models.Book
 	decoder := json.NewDecoder(r.Body)
-	
+
 	if err := decoder.Decode(&b); err != nil {
 		respondWithError(w, http.StatusBadRequest, err)
 		return
 	}
 	defer r.Body.Close()
 
-	  id, err := b.CreateBook(server.DB)
-	  if err != nil {
+	id, err := b.CreateBook(server.DB)
+	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err)
 		return
 	}
-	  
+
 	respondWithJSON(w, http.StatusCreated, id)
 }
 
 func (server *Server) getAllBooks(w http.ResponseWriter, r *http.Request) {
-
 	books, err := models.GetBooks(server.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err)
 		return
 	}
-	fmt.Println("books ww", w)
 	respondWithJSON(w, http.StatusOK, books)
 }
 
@@ -108,7 +104,6 @@ func (server *Server) getBook(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	fmt.Println("book id ww", w)
 	respondWithJSON(w, http.StatusOK, b)
 }
 

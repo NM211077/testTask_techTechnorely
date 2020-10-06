@@ -1,10 +1,7 @@
 package middleware
 
 import (
-	//"errors"
 	"net/http"
-
-	//"github.com/NM211077/testTask_techTechnorely/responses"
 )
 
 func SetMiddlewareJSON(next http.HandlerFunc) http.HandlerFunc {
