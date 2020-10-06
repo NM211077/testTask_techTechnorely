@@ -5,6 +5,9 @@ Golang should be installed in your local machine
     https://golang.org/doc/install
 
 MySql should be installed in your machine. If you have not installed MySQL please install it.
+ 
+ Create database books
+ 
  MySQL table that our CRUD operations operate on:
  
     CREATE TABLE books (
