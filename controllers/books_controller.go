@@ -58,7 +58,7 @@ func respondWithJSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	}
 }
 
-func (server *Server) createBook(w http.ResponseWriter, r *http.Request) {
+func (server *Server) СreateBook_router(w http.ResponseWriter, r *http.Request) {
 	var b models.Book
 	decoder := json.NewDecoder(r.Body)
 
@@ -77,7 +77,7 @@ func (server *Server) createBook(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, id)
 }
 
-func (server *Server) getAllBooks(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetAllBooks_router(w http.ResponseWriter, r *http.Request) {
 	books, err := models.GetBooks(server.DB)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err)
@@ -86,7 +86,7 @@ func (server *Server) getAllBooks(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, books)
 }
 
-func (server *Server) getBook(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetBook_router(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -107,7 +107,7 @@ func (server *Server) getBook(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, b)
 }
 
-func (server *Server) updateBook(w http.ResponseWriter, r *http.Request) {
+func (server *Server) UpdateBook_router(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -132,7 +132,7 @@ func (server *Server) updateBook(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, b)
 }
 
-func (server *Server) deleteBook(w http.ResponseWriter, r *http.Request) {
+func (server *Server) DeleteBook_router(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -151,9 +151,9 @@ func (server *Server) deleteBook(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) initializeRoutes() {
 
-	s.Router.HandleFunc("/book/{id}", s.getBook).Methods("GET")
-	s.Router.HandleFunc("/books", s.getAllBooks).Methods("GET")
-	s.Router.HandleFunc("/book", s.createBook).Methods("POST", "PUT")
-	s.Router.HandleFunc("/book/{id}", s.updateBook).Methods("PUT", "POST")
-	s.Router.HandleFunc("/book/{id}", s.deleteBook).Methods("DELETE")
+	s.Router.HandleFunc("/book/{id}", s.GetBook_router).Methods("GET")
+	s.Router.HandleFunc("/books", s.GetAllBooks_router).Methods("GET")
+	s.Router.HandleFunc("/book", s.СreateBook_router).Methods("POST", "PUT")
+	s.Router.HandleFunc("/book/{id}", s.UpdateBook_router).Methods("PUT", "POST")
+	s.Router.HandleFunc("/book/{id}", s.DeleteBook_router).Methods("DELETE")
 }

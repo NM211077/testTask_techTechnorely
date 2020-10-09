@@ -134,3 +134,33 @@ Then run:
     --- PASS: TestDeleteBook (0.02s)
     PASS
     ok      github.com/NM211077/testTask_techTechnorely/models      0
+    
+  
+  ## controllers_test
+  
+  Running all tests in the controllers_test package:
+  
+  To run the test suite in the controllers_test package, make sure in your terminal, you are in the path:
+  
+      $ cd controllers
+  
+  Then run:
+  
+      go test -v
+  
+   All tests in the models_test package are run and all passed.
+      
+      We are connected to the mysql database
+      === RUN   TestCreateProduct
+      --- PASS: TestCreateProduct (0.02s)
+      === RUN   TestGetBooks
+      books [{1 testTitle testAuthor 12.25}]
+      --- PASS: TestGetBooks (0.00s)
+      === RUN   TestGetBookByID
+      --- PASS: TestGetBookByID (0.00s)
+      === RUN   TestUpdateBookByID
+      --- PASS: TestUpdateBookByID (0.02s)
+      === RUN   TestDeleteBookByID
+      --- PASS: TestDeleteBookByID (0.11s)
+      PASS
+      ok      github.com/NM211077/testTask_techTechnorely/controllers 0.276s
