@@ -13,7 +13,7 @@ MySql should be installed in your machine. If you have not installed MySQL pleas
     CREATE TABLE books (
         id int  NOT NULL AUTO_INCREMENT ,
         title TEXT NOT NULL,
-        autor TEXT NOT NULL,
+        author TEXT NOT NULL,
         price DECIMAL(10,2) NOT NULL DEFAULT 0.00,
         CONSTRAINT books_bkey PRIMARY KEY (id)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -101,3 +101,36 @@ Delete book at id (/book/{id})
  DELETE  http://localhost:8002/book/7 
 
     example reqest:{"result":"success"}
+
+
+## TESTS
+
+## models_test
+
+Running all tests in the models_test package:
+
+To run the test suite in the modeltests package, make sure in your terminal, you are in the path:
+
+    $ cd models
+
+Then run:
+
+    go test -v
+
+ All tests in the models_test package are run and all passed.
+ 
+    We are connected to the mysql database
+    === RUN   TestCreateBook
+    --- PASS: TestCreateBook (0.01s)
+    === RUN   TestGetAllBooks
+    books [{1 testBook testAuthor 125.2}]
+    books [{1 testBook testAuthor 125.2} {2 testBook testAuthor 125}]
+    --- PASS: TestGetAllBooks (0.01s)
+    === RUN   TestGetBook
+    --- PASS: TestGetBook (0.02s)
+    === RUN   TestUpdateBook
+    --- PASS: TestUpdateBook (0.02s)
+    === RUN   TestDeleteBook
+    --- PASS: TestDeleteBook (0.02s)
+    PASS
+    ok      github.com/NM211077/testTask_techTechnorely/models      0
